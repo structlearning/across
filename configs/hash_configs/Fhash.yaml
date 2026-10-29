@@ -1,0 +1,34 @@
+hashing:
+    name: 'Fhash'
+    classPath: 'lsh.fhash'
+    device: "cpu"
+    FUNC: "hinge"
+    hcode_dim: 64
+    subset_size: 8
+    m_use: 10
+    a: -100
+    b: 100
+    T: 25
+    num_hash_tables: 10
+    smoothing: "none"
+
+
+fmap_training:
+    classPath: 'lsh.train_fmaps'
+    model_name: "AsymFmapTrainer"
+    device: "cuda"
+    tr_fmap_dim: 10
+    tr_fmap_loss: "BCE3"
+    hidden_layers: []
+    margin: 0.05
+    P2N: 1.0
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,69 @@
+[project]
+name = "reform-graph"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = "==3.10.19"
+dependencies = [
+    "loguru>=0.7.3,<0.8.0",
+    "networkx==3.1",
+    "omegaconf>=2.3.0,<3.0.0",
+    "pebble>=5.2.0,<6.0.0",
+    "pyfiglet>=1.0.4,<2.0.0",
+    "python-dotenv>=1.2.2,<2.0.0",
+    "scikit-learn==1.0.2",
+    "scipy==1.8.1",
+    "torch==2.8.0",
+    "torch-geometric==2.7.0",
+    "tqdm>=4.66.1,<5.0.0",
+    "wandb>=0.25.0,<0.26.0",
+]
+
+[tool.uv]
+add-bounds = "major"
+
+[build-system]
+requires = ["uv_build>=0.8.22,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "marimo>=0.21.1,<0.22.0",
+    "matplotlib>=3.10.8,<4.0.0",
+    "pandas>=2.3.3,<3.0.0",
+    "plotly>=6.6.0,<7.0.0",
+    "pytest>=9.0.2,<10.0.0",
+    "pytest-benchmark>=5.2.3,<6.0.0",
+]
+
+[tool.uv.build-backend]
+module-name = ["reform"]
+module-root = ""
+
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.format]
+preview = true
+docstring-code-format = true
+
+[tool.ruff.lint]
+preview = true
+select = ["ARG", "B", "C4", "E", "EM", "EXE", "F", "I", "ISC003", "NPY", "PD",
+          "PERF", "PIE", "PLE", "PT", "PYI", "Q004", "FURB", "RET", "RUF",
+          "SIM", "UP", "W", "YTT"]
+ignore = ["UP007", "UP045", "E701", "SIM108"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.basedpyright]
+typeCheckingMode = "standard"
+reportDeprecated = true
+reportDuplicateImport = true
+reportIgnoreCommentWithoutRule = true
+reportMatchNotExhaustive = true
+reportUnnecessaryCast = true
+reportUnnecessaryComparison = true
+reportUnnecessaryContains = true
+reportUnnecessaryIsInstance = true

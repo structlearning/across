@@ -1,0 +1,6 @@
+model:
+    name: 'GEN'
+    classPath: 'reform.models'
+    scoring_function: 'cos'
+    
+    

@@ -1,0 +1,5 @@
+model:
+    name: 'ISONET'
+    classPath: 'reform.models' 
+    
+    

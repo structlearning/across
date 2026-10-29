@@ -1,0 +1,144 @@
+task:
+  name: ''
+  wandb_project: 'GREFORM'
+  wandb_group:
+  wandb_enabled: True
+  wandb_mode: 'online' # online, offline, disabled
+log:
+  dir: 'logs'
+
+base_dir: './'
+DEBUG: False
+K: -1
+separate_eval:
+
+use_cluster: null # Int[0 - 4]: whether to use the cluster assignments for the queries
+cluster_suffix: null
+cluster_rel_subdir: null # subdir within clusters/{use_cluster}/ where relationship files live (e.g. augnet name for LSH)
+val_use_test_set: False # if True, use the test set as the validation set (for hypothesis testing)
+
+log_path: ''
+
+training:
+  batch_size: 128
+  device: 'cuda'
+  dropout: 0
+  learning_rate: 1e-3
+  weight_decay: 5e-4
+  num_epochs: 20000
+  seed: 0
+  run_till_early_stopping: True
+  wandb_watch: False
+  resume: False
+  margin: 1.0
+  sinkhorn_temp: 0.1
+  # sinkhorn_noise: 0
+  loss: 'pairwise-ranking' # pairwise-ranking, celoss, ce-avg, ce-adv-max. IR: try MSE for augmap training.
+  stratified_batching: True # if False, use simple shuffle-and-slice batching (all pairs once per epoch, no ratio enforcement). Automatically False when loss=celoss.
+  scalable: False
+  same_query_batching: False # every batch caters to a single query - for ranking loss anchoring
+  labeled_subset: False # whether to train only on the labeled subset of queries (as per the qpart files)
+  silver_top_K: null
+  oracle_dataset: null # load oracle-annotated 50-query dataset; set to "lsh" or "random" to select which rel file to use
+  oracle_fresh: False # flag to change task name
+  relationship_load: 'base' # base | lsh | random | infomax | wl_kernel | kcenter | kmeans | gnn_dist; which relationship file to load for training GNN
+
+aug_embedder:
+  model: 'mlp' # mlp, linear. IR: try different MLP for different dimensions d, so MLP_i for each dimension d.
+  symmetric: True # whether to use the same model for both query and candidate embeddings
+  hidden_dim: 64
+  num_layers: 2 # IR: single layer linear projection works best for latency reasons
+  output_dim: 10
+  best_checkpoint_path: null # load the graph embedding model from this full checkpoint path
+  latest_ckpts_path: null # path to the latest checkpoints directory, to search for one or two epochs before the best checkpoints
+  go_back_epochs: 2 # how many epochs back to look for in the latest checkpoints directory, to find a checkpoint close to the best checkpoint
+  num_hyperplanes: 4 # num hyperplanes for randomized projections
+  use_pretrained_embs: False
+  epsilon: 0.1 # exploration around epsilon ball for aug map training
+  lambda_times: 10 # number of times to sample lambda for the ce-avg loss
+  u_times: 10 # number of times to sample u for the ce-avg loss
+  aug_form: 'long' # short | long : the form of the higher-dim augmented vectors before the randomized projections are applied
+  num_pgd_steps: 40
+  pgd_epsilon: 0.1
+  pgd_step_size: 0.01
+  push_minus: False # putting a minus sign on query input to augmented map model
+  model_every_dim: False # whether to use a different mlp/linear for each dimension d, or the same one for all dimensions
+  aug_corpus_model: 'init' # init | current; used for validation/test
+  dont_skip_dump: False # whether to skip the dumping of aug maps if the dump files already exist. Should be False for the aug map dumping script, but can be set to True in the lsh training script to use the existing dumped aug maps instead of generating new ones on the fly.
+  pre_augnet_dumps: False # if True, load embeddings from _dump_pre_augnet_embs dirs instead of _dump_aug_embs
+  pre_augnet_replicas: False # if True, reshape (D,N,K) → (D*R,N,K/R) so each hyperplane gets its own hash table
+  random_init_dumps: False # if True, load embeddings from _dump_random_init_embs dirs (GNN+AugNet both randomly initialized)
+
+lsh:
+  model: 'linear' # linear, mlp
+  output_dim: 64
+  aug_checkpoint_path: null  # best checkpoint path for aug embedder
+  fmap_checkpoint_path: null # best checkpoint path for fmap model
+  lambda_fence_sit: 0.1
+  lambda_coll_min: 0.5
+  lambda_bit_bal: 0.4
+  coll_min_margin: 1.0
+  tanh_temp: 1.0
+  dump_dir: null # required in the aug map dumping script. if present in lsh training script, will use the dumped aug maps for training the lsh model, instead of generating new ones on the fly.
+  dump_splits: [train, val, test] # used in the aug dumping script to specify which splits to dump the augmented maps for
+  es_metric: 'val_loss' # val_loss only, as sign_map | raw_map | tanh_map not available
+  num_hashtables: 10
+  subset_size: 17 # 20 bit indices to be taken at random from total output_dim bits
+  linear_every_dim: False # whether to use a different linear layer for each dimension d, or the same one for all dimensions
+  chunk_size: 50
+  rerank_mode: 'cos' # cos | orig
+  same_idxs_across_dims: False # whether to use the same bit indices across dimensions, or different ones for each dimension
+  third_loss_type: 'sc_coll_min' # third loss type: sc_coll_min | ad_decorr
+  retr_random_hyper: False # if True, use random Gaussian hyperplanes instead of learned model weights
+  random_hyper_seed: 0 # seed for random hyperplane generation (only used when retr_random_hyper=True)
+  inner_plot_dir: null
+  subtract_mean: False # during lsh retrieval sweep, subtract the corresponding mean from the query and corpus embeddings
+
+fmap_embedder:
+  model: 'mlp'        # mlp | linear
+  symmetric: False    # whether to share the MLP between query and corpus
+  hidden_dim: 64
+  num_layers: 2
+  output_dim: 10
+  best_checkpoint_path: null   # best GNN checkpoint path
+  latest_ckpts_path: null      # dir to search for the initial GNN checkpoint
+  go_back_epochs: 2
+  m_use: 10           # Fourier frequencies per embedding dimension; feature dim = 4*m
+  T: 3.0              # dominance kernel time parameter
+  freq_a: -100.0      # frequency sampling lower bound
+  freq_b: 100.0       # frequency sampling upper bound
+  lambda_times: 10    # number of lambda samples (ce-avg)
+  u_times: 10         # number of direction samples (ce-avg)
+  pgd_epsilon: 0.1    # PGD ball radius (ce-adv-max)
+  pgd_step_size: 0.01
+  num_pgd_steps: 40
+  flat_mlp: False      # if True, flatten (B, d, 4m) → (B, d*4m) before MLP, like FHN
+  dont_skip_dump: False # if True, overwrite existing dump files
+
+dataset:
+  name: 'ptc_mm'
+  rel_mode: 'sub_iso'
+  path: 'data'
+  # feature_type: 'One'
+  data_type: 'gmn' # use 'idx' for LSH training
+
+early_stopping:
+  tolerance: 5e-3
+  best_val_name: 'bestValidationModels' # incase we need to specify a different directory to search for validation models
+  shorten: False # whether to shorten the names of the log files and validation models
+  metric: 'map_score'
+  patience: 50
+  validate_every_n_steps: null # if set, use step-based validation instead of epoch-based
+
+gmn:
+  filters_3: 10
+  GMN_NPROPLAYERS: 5
+
+active_selection:
+  random_selection: False
+  freeze_layers_before_last_layer: True
+  num_query_samples: 50
+  K: 20
+  num_iters: 10  # number of train iters
+  patience: 10
+  oracle: True # if True, use ground truth labels to decide whether the query will be selected, else treat the selection method's returned top-K as all-pseudo-positives.

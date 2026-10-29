@@ -1,0 +1,47 @@
+hashing:
+    name: 'Ghash_Trained'
+    classPath: 'lsh.ghash_trained'
+    device: "cpu"
+    FUNC: ""
+    hcode_dim: 64
+    subset_size: 8
+    subset_type: "same"
+    m_use: 10
+    a: -100 # lower frequency threshold
+    b: 100 # upper frequency threshold
+    c: 100 # exponential decay parameter
+    T: 2
+    smoothing: "expdecay"
+
+fmap_training:
+    classPath: 'lsh.train_ghash_fmaps'
+    model_name: "GhashAsymFmapTrainer"
+    device: "cuda"
+    tr_fmap_dim: 10
+    tr_fmap_loss: "BCE3"
+    hidden_layers: []
+    margin: 0.05
+    P2N: 1.0
+
+hashcode_training:
+    model_name: "GhashHashCodeTrainer"
+    classPath: 'lsh.train_ghash_hashcode'
+    device: "cuda"
+    LOSS_TYPE: "query_aware"
+    QA_subset_size: 8
+    QA_MARGIN: 1.0
+    FENCE: 0.1
+    DECORR: 0
+    C1: 0
+    hidden_layers: []
+    TANH_TEMP: 1.0
+
+
+
+
+
+
+
+
+
+

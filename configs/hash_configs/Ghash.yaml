@@ -1,0 +1,34 @@
+hashing:
+    name: 'Ghash'
+    classPath: 'lsh.ghash'
+    device: "cpu"
+    FUNC: ""
+    hcode_dim: 64
+    subset_size: 8
+    subset_type: "same"
+    m_use: 10
+    a: -100 # lower frequency threshold
+    b: 100 # upper frequency threshold
+    c: 100 # exponential decay parameter
+    T: 2
+    smoothing: "expdecay"
+
+fmap_training:
+    classPath: 'lsh.train_ghash_fmaps'
+    model_name: "GhashAsymFmapTrainer"
+    device: "cuda"
+    tr_fmap_dim: 10
+    tr_fmap_loss: "BCE3"
+    hidden_layers: []
+    margin: 0.05
+    P2N: 1.0
+
+
+
+
+
+
+
+
+
+

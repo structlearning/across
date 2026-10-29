@@ -1,0 +1,25 @@
+hashing:
+    name: 'Ghash_Raw'
+    classPath: 'lsh.ghash_raw'
+    device: "cpu"
+    FUNC: ""
+    hcode_dim: 64
+    subset_size: 8
+    subset_type: "same"
+    m_use: 10
+    a: -100 # lower frequency threshold
+    b: 100 # upper frequency threshold
+    c: 100 # exponential decay parameter
+    T: 2
+    smoothing: "expdecay"
+
+
+
+
+
+
+
+
+
+
+
