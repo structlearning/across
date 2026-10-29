@@ -1,0 +1,28 @@
+# PyG wheels for torch 2.8.0 + cu128.
+--find-links https://data.pyg.org/whl/torch-2.8.0+cu128.html
+
+torch==2.8.0
+torch-geometric==2.7.0
+torch_cluster==1.6.3+pt28cu128
+torch_scatter==2.1.2+pt28cu128
+torch_sparse==0.6.18+pt28cu128
+
+numpy==1.26.4
+scipy==1.15.3
+networkx==3.1
+scikit-learn==1.0.2
+matplotlib==3.8.0
+pandas==2.1.1
+plotly==6.6.0
+
+loguru==0.7.3
+tqdm==4.66.1
+Pebble==5.2.0
+pyfiglet==1.0.4
+python-dotenv==1.2.2
+omegaconf==2.3.0
+psutil==5.9.0
+
+huggingface_hub==2.3.0
+wandb==0.16.6
+dgl==1.1.3

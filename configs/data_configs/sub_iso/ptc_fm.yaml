@@ -1,0 +1,12 @@
+dataset:
+    min_cgraph_nodes:  15
+    max_cgraph_nodes:  20
+    min_qgraph_nodes:  5
+    max_qgraph_nodes:  15
+    MinR: 0.05
+    MaxR: 0.25 
+    aug_num_cgraphs: 100000
+    actual_max_node_set_size: 25
+    embed_dim: 10
+    name: 'ptc-fm'
+    

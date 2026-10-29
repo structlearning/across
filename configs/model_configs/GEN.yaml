@@ -1,0 +1,4 @@
+model:
+    name: 'GEN'
+    classPath: 'across.models'
+    scoring_function: 'cos'
