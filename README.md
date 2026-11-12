@@ -2,7 +2,7 @@
 
 Reference implementation for the NeurIPS 2026 paper
 *Active Corpus Selection for Training Subgraph Retrievers Using OOD Queries*
-[https://neurips.cc/virtual/2026/loc/sydney/poster/153257](Poster)/[https://openreview.net/forum?id=MbIpE61lGH](OpenReview).
+[Poster](https://neurips.cc/virtual/2026/loc/sydney/poster/153257)/[OpenReview](https://openreview.net/forum?id=MbIpE61lGH).
 
 ## Quickstart
 
